@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "QueueReaderWriteToCosmos": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

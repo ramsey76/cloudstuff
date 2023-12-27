@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MessageGenerator": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
