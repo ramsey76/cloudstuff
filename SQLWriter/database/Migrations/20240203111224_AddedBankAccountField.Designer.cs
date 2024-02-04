@@ -12,8 +12,8 @@ using SQLWriter.Database;
 namespace database.Migrations
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20231201140729_initial")]
-    partial class initial
+    [Migration("20240203111224_AddedBankAccountField")]
+    partial class AddedBankAccountField
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,7 +42,7 @@ namespace database.Migrations
 
             modelBuilder.Entity("SQLWriter.Models.BankAccount", b =>
                 {
-                    b.Property<Guid>("BankAccountId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -59,22 +59,33 @@ namespace database.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("BankAccountId");
+                    b.Property<decimal>("dollarAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("BankId");
 
                     b.ToTable("BankAccounts");
                 });
 
-            modelBuilder.Entity("SQLWriter.Models.BankAccountUsers", b =>
+            modelBuilder.Entity("SQLWriter.Models.BankAccountUser", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<Guid>("BankAccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("BankAccountId", "UserId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankAccountId");
 
                     b.HasIndex("UserId");
 
@@ -83,13 +94,9 @@ namespace database.Migrations
 
             modelBuilder.Entity("SQLWriter.Models.User", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Bsn")
                         .IsRequired()
@@ -111,11 +118,15 @@ namespace database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("StreetAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Telephone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
@@ -131,7 +142,7 @@ namespace database.Migrations
                     b.Navigation("Bank");
                 });
 
-            modelBuilder.Entity("SQLWriter.Models.BankAccountUsers", b =>
+            modelBuilder.Entity("SQLWriter.Models.BankAccountUser", b =>
                 {
                     b.HasOne("SQLWriter.Models.BankAccount", "BankAccount")
                         .WithMany("BankAccountUsers")
