@@ -10,10 +10,10 @@ public enum BankAccountType {
 
 public class BankAccount
 {
-        public Guid Id {get;set;}
+        public int Id {get;set;}
         public string AccountNumber {get;set;}
+        public int BankId {get;set;}
         public Bank Bank {get;set;}
-        public Guid BankId {get;set;}
         public Decimal CurrentAmount {get;set;}    
         public Decimal DollarAmount {get;set;}
         public BankAccountType Type {get;set;}

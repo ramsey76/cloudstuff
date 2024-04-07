@@ -2,9 +2,9 @@
 
 public class Bank
 {
-    public Guid Id {get;set;}
+    public int Id {get;set;}
     public required string Name {get;set;}
 
     public 
-    ICollection<BankAccount> BankAccounts {get;set;}
+    ICollection<BankAccount> BankAccounts {get;set;} = [];
 }

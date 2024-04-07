@@ -1,6 +1,7 @@
 ﻿using SQLWriter.Models;
 using SQLWriter.Database;
 using Microsoft.VisualBasic;
+using System.Security.Cryptography;
 
 namespace SQLWriter;
 
@@ -23,8 +24,7 @@ public class SQLPublisher
         
         var bank = new Bank(){
             Name = "OldBank",
-            Id = Guid.NewGuid(),
-            BankAccounts = new List<BankAccount>()
+            Id = RandomNumberGenerator.GetInt32(1, 1000000)
         };
         bankContext.Banks.Add(bank);
         

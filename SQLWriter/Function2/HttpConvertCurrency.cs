@@ -9,17 +9,19 @@ namespace Function2
     public class HttpConvertCurrency
     {
         private readonly ILogger _logger;
+        private readonly Calculate _calculate;
 
-        public HttpConvertCurrency(ILoggerFactory loggerFactory)
+        public HttpConvertCurrency(ILoggerFactory loggerFactory, Calculate calculate)
         {
             _logger = loggerFactory.CreateLogger<HttpConvertCurrency>();
+            _calculate = calculate;
         }
 
         [Function("HttpConvertCurrency")]
-        [SqlOutput("dbo.BankAccounts", "SqlConnectionString")] //Output conversion to SQL Database
-        public IEnumerable<BankAccount> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] 
+        
+        public async Task<OutputType> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] 
                                     HttpRequestData req,
-                                    [SqlInput(commandText: "SELECT * FROM BankAccounts JOIN Banks ON Banks.Id = BankAccounts.BankId", 
+                                    [SqlInput(commandText: "SELECT top 500000 * FROM BankAccounts JOIN Banks ON Banks.Id = BankAccounts.BankId", 
                                     commandType: System.Data.CommandType.Text, 
                                     connectionStringSetting:"SqlConnectionString")] 
                                     IEnumerable<BankAccount> bankAccounts)
@@ -27,12 +29,10 @@ namespace Function2
             _logger.LogInformation("C# HTTP trigger function proccessing Dollar Conversion.");
             
             
-            //var totalAmount = 0m;
             foreach(var bankAccount in bankAccounts)
             {
-                bankAccount.DollarAmount = bankAccount.CurrentAmount * 1.08m;
-                //totalAmount =+ bankAccount.DollarAmount;
-                 
+                
+                _calculate.DollarAmountCurrentAccount(bankAccount);
             }
 
             var response = req.CreateResponse(HttpStatusCode.OK);
@@ -40,7 +40,18 @@ namespace Function2
             
             _logger.LogInformation("C# HTTP trigger function proccessing Dollar Conversion done.");
             
-            return bankAccounts;
+            return new OutputType {
+                BankAccounts1 = bankAccounts,
+                HttpResponse= req.CreateResponse(System.Net.HttpStatusCode.OK)
+            };
+        }
+
+        public class OutputType()
+        {
+            [SqlOutput("dbo.BankAccounts", "SqlConnectionString")] //Output conversion to SQL Database
+            public IEnumerable<BankAccount> BankAccounts1 {get;set;}
+            
+            public HttpResponseData HttpResponse {get;set;}
         }
     }
 }

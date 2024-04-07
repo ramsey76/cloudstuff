@@ -1,7 +1,15 @@
+using Function2;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
-var host = new HostBuilder()
+var hostBuilder = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
-    .Build();
+    .ConfigureServices(services =>
+    {
+        services.AddLogging();
+        services.AddTransient<Calculate>();
+    });
+    
 
-host.Run();
+var host = hostBuilder.Build();
+await host.RunAsync();

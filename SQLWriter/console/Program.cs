@@ -18,13 +18,23 @@ public class Program
                 
                 services.AddDbContext<BankContext>(options => 
                     {
-                        options.UseSqlServer(@"Server=sql-cloudnative-002.database.windows.net;Database=SqlDb-cloudnative-002;User Id=mainuser;Password=Marvel0!");
+                        options.UseSqlServer(@"Server=tcp:sql-cloudnative-002.database.windows.net,1433;Initial Catalog=SqlDb-cloudnative-002;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication='Active Directory Default';");
                     }
                 );
             }
         );
 
         var host = builder.Build();
+
+        using (var scope = host.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<BankContext>();
+
+            // This will apply any pending migrations.
+            context.Database.Migrate();
+        }
+
         var service = host.Services.GetRequiredService<SQLPublisher>();
 
         service.WriteEntities();

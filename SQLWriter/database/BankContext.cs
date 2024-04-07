@@ -12,14 +12,15 @@ public class BankContext : DbContext
     public DbSet<BankAccountUser> BankAccountUsers {get;set;}
     
 
-    // public BankContext(DbContextOptions<BankContext> options) : base(options)
-    // {
-    // }
+    public BankContext(DbContextOptions<BankContext> options) : base(options)
+    {
+    }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Server=sql-cloudnative-002.database.windows.net;Database=SqlDb-cloudnative-002;User Id=mainuser;Password=Marvel0!");
-        }
+//         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//         {
+// //            optionsBuilder.UseSqlServer(@"Server=tcp:sql-cloudnative-002.database.windows.net,1433;Initial Catalog=SqlDb-cloudnative-002;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication='Active Directory Default';");
+            
+//         }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
