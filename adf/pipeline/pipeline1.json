@@ -157,7 +157,7 @@
 				}
 			},
 			{
-				"name": "Web1",
+				"name": "Send Import Started",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
