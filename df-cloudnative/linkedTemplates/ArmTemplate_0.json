@@ -411,7 +411,7 @@
 							"headers": {
 								"Content-Type": "application/json",
 								"BrokerProperties": {
-									"value": "{\"CorrelationId\":\"@variables('CorrelationId')\"}",
+									"value": "@concat('{\"CorrelationId\":\"',variables('CorrelationId'),'\"}')",
 									"type": "Expression"
 								}
 							},
