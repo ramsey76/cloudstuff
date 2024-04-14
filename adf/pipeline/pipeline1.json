@@ -181,7 +181,9 @@
 						"Content-Type": "application/json"
 					},
 					"url": "https://cloudnative.servicebus.windows.net/businessevents",
-					"body": "",
+					"body": {
+						"EventType:": "ImportStarted"
+					},
 					"authentication": {
 						"type": "MSI",
 						"resource": "https://servicebus.azure.net"
