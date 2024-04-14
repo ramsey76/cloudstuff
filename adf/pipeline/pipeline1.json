@@ -179,7 +179,7 @@
 					"method": "POST",
 					"headers": {
 						"Content-Type": "application/json",
-						"": {
+						"BrokerProperties": {
 							"value": "{\"CorrelationId\":\"@variables('CorrelationId')\"}",
 							"type": "Expression"
 						}
