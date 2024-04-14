@@ -392,7 +392,7 @@
 						"type": "WebActivity",
 						"dependsOn": [
 							{
-								"activity": "Script1",
+								"activity": "Set CorrelationId",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -409,7 +409,11 @@
 						"typeProperties": {
 							"method": "POST",
 							"headers": {
-								"Content-Type": "application/json"
+								"Content-Type": "application/json",
+								"BrokerProperties": {
+									"value": "{\"CorrelationId\":\"@variables('CorrelationId')\"}",
+									"type": "Expression"
+								}
 							},
 							"url": "https://cloudnative.servicebus.windows.net/businessevents/messages",
 							"body": {
@@ -418,6 +422,30 @@
 							"authentication": {
 								"type": "MSI",
 								"resource": "https://servicebus.azure.net"
+							}
+						}
+					},
+					{
+						"name": "Set CorrelationId",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Script1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "CorrelationId",
+							"value": {
+								"value": "@guid()",
+								"type": "Expression"
 							}
 						}
 					}
@@ -435,6 +463,9 @@
 					"BankGuidId": {
 						"type": "String",
 						"defaultValue": "7458510f-95d7-4b52-a44b-ef2b9a43efbf"
+					},
+					"CorrelationId": {
+						"type": "String"
 					}
 				},
 				"annotations": [],
