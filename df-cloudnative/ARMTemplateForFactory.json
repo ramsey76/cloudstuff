@@ -210,7 +210,7 @@
 							},
 							"url": "https://cloudnative.servicebus.windows.net/businessevents/messages",
 							"body": {
-								"EventType:": "ImportStarted"
+								"EventType": "ImportStarted"
 							},
 							"authentication": {
 								"type": "MSI",
