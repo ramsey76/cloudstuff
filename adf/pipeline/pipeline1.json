@@ -255,7 +255,10 @@
 								}
 							}
 						],
-						"sqlReaderQuery": "SELECT NEWID() as Id, BankAccountNumber, CurrentAmount, [Type], Id as ExternalId\nFROM dbo.BankAccounts\nWHERE dbo.BankAccounts.BankId = '@{pipeline().parameters.BankId}'",
+						"sqlReaderQuery": {
+							"value": "SELECT NEWID() as Id, BankAccountNumber, CurrentAmount, [Type], Id as ExternalId\nFROM dbo.BankAccounts\nWHERE dbo.BankAccounts.BankId = '@{pipeline().parameters.BankId}'",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -362,6 +365,44 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Send Import Finished",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Copy Account",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json",
+						"BrokerProperties": {
+							"value": "@concat('{\"CorrelationId\":\"',variables('CorrelationId'),'\"}')",
+							"type": "Expression"
+						}
+					},
+					"url": "https://cloudnative.servicebus.windows.net/businessevents/messages",
+					"body": {
+						"EventType": "ImportFinished"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://servicebus.azure.net"
+					}
+				}
 			}
 		],
 		"parameters": {
