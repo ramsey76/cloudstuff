@@ -1,0 +1,48 @@
+{
+	"name": "Target_BankAccounts",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlDbcloudnative003",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Target"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "AccountNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Balance",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "BankAccountType",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ExternalId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "InstitutionId",
+				"type": "uniqueidentifier"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "BankAccounts"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

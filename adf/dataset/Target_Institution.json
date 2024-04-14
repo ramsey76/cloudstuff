@@ -1,0 +1,37 @@
+{
+	"name": "Target_Institution",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlDbcloudnative003",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Target"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ExternalId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "Description",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Institutions"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

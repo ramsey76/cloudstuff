@@ -1,0 +1,9 @@
+{
+	"name": "df-cloudnative",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0a5a4f07-1d5b-4e2e-b00b-cfaa94c5128f",
+		"tenantId": "f7a054b6-6074-44c8-8a73-31cbb08e8d60"
+	}
+}

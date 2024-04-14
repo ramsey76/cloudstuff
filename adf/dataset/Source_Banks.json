@@ -1,0 +1,29 @@
+{
+	"name": "Source_Banks",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlDbcloudnative002",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Source"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Banks"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
