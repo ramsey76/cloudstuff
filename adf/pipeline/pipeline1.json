@@ -128,6 +128,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"additionalColumns": [
+							{
+								"name": "BankId",
+								"value": {
+									"value": "@variables('BankGuidId')",
+									"type": "Expression"
+								}
+							}
+						],
 						"sqlReaderQuery": {
 							"value": "SELECT NEWID() as Id, AccountNumber, CurrentAmount, [Type], Id as ExternalId\nFROM dbo.BankAccounts\nWHERE dbo.BankAccounts.BankId = '@{pipeline().parameters.BankId}'",
 							"type": "Expression"
@@ -143,69 +152,6 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "Id",
-									"physicalType": "uniqueidentifier"
-								},
-								"sink": {
-									"name": "Id",
-									"type": "Guid",
-									"physicalType": "uniqueidentifier"
-								}
-							},
-							{
-								"source": {
-									"name": "AccountNumber",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "AccountNumber",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "CurrentAmount",
-									"type": "Decimal",
-									"physicalType": "decimal",
-									"scale": 2,
-									"precision": 18
-								},
-								"sink": {
-									"name": "Balance",
-									"type": "Decimal",
-									"physicalType": "decimal",
-									"scale": 2,
-									"precision": 18
-								}
-							},
-							{
-								"source": {
-									"name": "ExternalId"
-								},
-								"sink": {
-									"name": "ExternalId",
-									"type": "Guid",
-									"physicalType": "uniqueidentifier"
-								}
-							},
-							{
-								"source": {
-									"name": "Type",
-									"type": "Int32",
-									"physicalType": "int"
-								},
-								"sink": {
-									"name": "BankAccountType",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							}
-						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
@@ -221,7 +167,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Target_BankAccounts",
+						"referenceName": "Target_Accounts",
 						"type": "DatasetReference"
 					}
 				]

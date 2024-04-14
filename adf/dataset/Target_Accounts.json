@@ -1,5 +1,5 @@
 {
-	"name": "Target_BankAccounts",
+	"name": "Target_Accounts",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SqlDbcloudnative003",
@@ -35,13 +35,13 @@
 				"type": "uniqueidentifier"
 			},
 			{
-				"name": "InstitutionId",
+				"name": "DeliveryId",
 				"type": "uniqueidentifier"
 			}
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "BankAccounts"
+			"table": "Accounts"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
