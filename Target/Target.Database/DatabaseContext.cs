@@ -7,35 +7,32 @@ namespace Target.Database
 {
     public class DatabaseContext : DbContext
     {
-        // public DatabaseContext(DbContextOptions<DatabaseContext> options)
-        //     : base(options)
-        // {
-        // }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public DatabaseContext(DbContextOptions<DatabaseContext> options)
+            : base(options)
         {
-            optionsBuilder.UseSqlServer(@"Server=tcp:sql-cloudnative-002.database.windows.net,1433;Initial Catalog=SqlDb-cloudnative-003;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication='Active Directory Default';");
         }
+
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     optionsBuilder.UseSqlServer(@"Server=tcp:sql-cloudnative-002.database.windows.net,1433;Initial Catalog=SqlDb-cloudnative-003;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication='Active Directory Default';");
+        // }
 
         public DbSet<Institution> Institutions { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Depositor> Depositors { get; set; }
+        public DbSet<DepositorAccount> DepositorAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Institution>()
-                .HasMany(i => i.Deliveries)
+                .HasMany(i => i.Accounts)
+                .WithOne(a => a.Institution)
+                .HasForeignKey(a => a.InstitutionId);
+
+            modelBuilder.Entity<Institution>()
+                .HasMany(i => i.Depositors)
                 .WithOne(d => d.Institution)
                 .HasForeignKey(d => d.InstitutionId);
-
-            modelBuilder.Entity<Account>()
-                .HasOne(a => a.Delivery)
-                .WithMany(d => d.Accounts)
-                .HasForeignKey(a => a.DeliveryId);
-
-            modelBuilder.Entity<Depositor>()
-                .HasOne(d => d.Delivery)
-                .WithMany(d => d.Depositors)
-                .HasForeignKey(d => d.DeliveryId);
 
             modelBuilder.Entity<Depositor>()
             .HasMany(d => d.Accounts)

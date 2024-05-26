@@ -25,25 +25,6 @@ namespace Target.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Delivery",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DeliveryDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    InstitutionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Delivery", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Delivery_Institutions_InstitutionId",
-                        column: x => x.InstitutionId,
-                        principalTable: "Institutions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Accounts",
                 columns: table => new
                 {
@@ -51,41 +32,42 @@ namespace Target.Database.Migrations
                     AccountNumber = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BankAccountType = table.Column<int>(type: "int", nullable: false),
-                    ExternalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DeliveryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ExternalId = table.Column<int>(type: "int", nullable: false),
+                    InstitutionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Accounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Accounts_Delivery_DeliveryId",
-                        column: x => x.DeliveryId,
-                        principalTable: "Delivery",
+                        name: "FK_Accounts_Institutions_InstitutionId",
+                        column: x => x.InstitutionId,
+                        principalTable: "Institutions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Depositor",
+                name: "Depositors",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeliveryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    InstitutionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Depositor", x => x.Id);
+                    table.PrimaryKey("PK_Depositors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Depositor_Delivery_DeliveryId",
-                        column: x => x.DeliveryId,
-                        principalTable: "Delivery",
+                        name: "FK_Depositors_Institutions_InstitutionId",
+                        column: x => x.InstitutionId,
+                        principalTable: "Institutions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DepositorAccount",
+                name: "DepositorAccounts",
                 columns: table => new
                 {
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -94,55 +76,47 @@ namespace Target.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DepositorAccount", x => new { x.AccountId, x.DepositorId });
+                    table.PrimaryKey("PK_DepositorAccounts", x => new { x.AccountId, x.DepositorId });
                     table.ForeignKey(
-                        name: "FK_DepositorAccount_Accounts_AccountId",
+                        name: "FK_DepositorAccounts_Accounts_AccountId",
                         column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DepositorAccount_Depositor_DepositorId",
+                        name: "FK_DepositorAccounts_Depositors_DepositorId",
                         column: x => x.DepositorId,
-                        principalTable: "Depositor",
+                        principalTable: "Depositors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_DeliveryId",
+                name: "IX_Accounts_InstitutionId",
                 table: "Accounts",
-                column: "DeliveryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Delivery_InstitutionId",
-                table: "Delivery",
                 column: "InstitutionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Depositor_DeliveryId",
-                table: "Depositor",
-                column: "DeliveryId");
+                name: "IX_DepositorAccounts_DepositorId",
+                table: "DepositorAccounts",
+                column: "DepositorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DepositorAccount_DepositorId",
-                table: "DepositorAccount",
-                column: "DepositorId");
+                name: "IX_Depositors_InstitutionId",
+                table: "Depositors",
+                column: "InstitutionId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DepositorAccount");
+                name: "DepositorAccounts");
 
             migrationBuilder.DropTable(
                 name: "Accounts");
 
             migrationBuilder.DropTable(
-                name: "Depositor");
-
-            migrationBuilder.DropTable(
-                name: "Delivery");
+                name: "Depositors");
 
             migrationBuilder.DropTable(
                 name: "Institutions");

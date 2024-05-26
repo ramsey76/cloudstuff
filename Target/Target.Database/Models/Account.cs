@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Target.Database.Models
 {
@@ -15,9 +13,9 @@ namespace Target.Database.Models
 
         public int BankAccountType { get; set; }
 
-        public required Guid ExternalId { get; set; }
-        public Delivery? Delivery { get; set; }  
-        public Guid DeliveryId { get; set; }
+        public required int ExternalId { get; set; }
+        public Institution? Institution { get; set; }  
+        public Guid InstitutionId { get; set; }
         public ICollection<DepositorAccount> DepositorAccounts { get; set; } = [];
         public ICollection<Depositor> Depositors { get; set; } = [];
     }

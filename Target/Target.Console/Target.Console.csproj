@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Target.Database\Target.Database.csproj" />
+    <ProjectReference Include="..\Target.Business\Target.Business.csproj" />
   </ItemGroup>
 
 </Project>

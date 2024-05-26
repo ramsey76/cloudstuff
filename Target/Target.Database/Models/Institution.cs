@@ -13,5 +13,6 @@ public class Institution
 
     public required int ExternalId { get; set; }
 
-    public ICollection<Delivery> Deliveries { get; set; } = [];
+    public ICollection<Account> Accounts { get; set; } = [];
+    public ICollection<Depositor> Depositors { get; set; } = [];
 }

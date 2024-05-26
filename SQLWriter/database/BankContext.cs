@@ -6,9 +6,9 @@ namespace SQLWriter.Database;
 
 public class BankContext : DbContext
 {
-    public DbSet<User> Users {get;set;}
     public DbSet<Bank> Banks {get;set;}
-    public DbSet<BankAccount>BankAccounts{get;set;}
+    public DbSet<User> Users {get;set;}
+    public DbSet<BankAccount> BankAccounts {get;set;}
     public DbSet<BankAccountUser> BankAccountUsers {get;set;}
     
 
@@ -16,30 +16,31 @@ public class BankContext : DbContext
     {
     }
 
-//         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//         {
-// //            optionsBuilder.UseSqlServer(@"Server=tcp:sql-cloudnative-002.database.windows.net,1433;Initial Catalog=SqlDb-cloudnative-002;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication='Active Directory Default';");
-            
-//         }
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    // {
+    //     optionsBuilder.UseSqlServer(@"Server=tcp:sql-cloudnative-002.database.windows.net,1433;Initial Catalog=SqlDb-cloudnative-002;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication='Active Directory Default';");
+        
+    // }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<BankAccount>()
-        .HasOne<Bank>(b => b.Bank)
-        .WithMany(b => b.BankAccounts)
-        .HasForeignKey(b => b.BankId);
+        modelBuilder.Entity<Bank>().Property(b => b.Id).ValueGeneratedNever();
+        modelBuilder.Entity<BankAccount>().Property(b => b.Id).ValueGeneratedNever();
+        modelBuilder.Entity<User>().Property(u => u.Id).ValueGeneratedNever();
 
-        modelBuilder.Entity<BankAccountUser>()
-        .HasOne<BankAccount>(bau => bau.BankAccount)
-        .WithMany(ba => ba.BankAccountUsers)
-        .HasForeignKey(bau => bau.BankAccountId);
-
-        modelBuilder.Entity<BankAccountUser>()
-        .HasOne<User>(bau => bau.User)
-        .WithMany(u => u.BankAccountUsers)
-        .HasForeignKey(bau => bau.UserId);
+        modelBuilder.Entity<Bank>()
+            .HasMany(e => e.BankAccounts)
+            .WithOne(e => e.Bank)
+            .HasForeignKey(e => e.BankId);
         
+        modelBuilder.Entity<Bank>()
+            .HasMany(e => e.Users)
+            .WithOne(e => e.Bank)
+            .HasForeignKey(e => e.BankId);
 
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<BankAccount>()
+            .HasMany(e => e.Users)
+            .WithMany(e => e.BankAccounts)
+            .UsingEntity<BankAccountUser>();
     }
 }

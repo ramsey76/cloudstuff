@@ -1,0 +1,9 @@
+
+services:
+  blogapp-sqlserver:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - "1433:1433"
+    environment:
+        MSSQL_SA_PASSWORD: "2@LaiNw)PDvs^t>L!Ybt]6H^%h3U>M"
+        ACCEPT_EULA: "Y"

@@ -2,6 +2,7 @@
 using SQLWriter.Database;
 using Microsoft.VisualBasic;
 using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 
 namespace SQLWriter;
 
@@ -26,10 +27,13 @@ public class SQLPublisher
             Name = "OldBank",
             Id = RandomNumberGenerator.GetInt32(1, 1000000)
         };
+//        bankContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Banks ON");
+        bankContext.SaveChanges();
         bankContext.Banks.Add(bank);
+        bankContext.SaveChanges();
         
         var fakerBankAccounts = Faker.BankAccountFaker(bank);
-        var fakeUser = Faker.UserFaker();
+        var fakeUser = Faker.UserFaker(bank);
         var fakeUsers = fakeUser.Generate(1000000);
         var fakeBankAccounts = fakerBankAccounts.Generate(750000);
         
@@ -42,15 +46,16 @@ public class SQLPublisher
         {
             bankContext.Users.AddRange(usersChunks[i]);
             bankContext.BankAccounts.AddRange(bankAccountChunks[i]);
-
-            var bankAccountUsers = new List<BankAccountUser>();
+            bankContext.SaveChanges();
             
+            var bankAccountUsers = new List<BankAccountUser>();
+
             var count = 0;
             while(count < 5000)
             {
                 bankAccountUsers.Add(new(){
-                        User = usersChunks[i][count],
-                        BankAccount = bankAccountChunks[i][count]
+                        UserId = usersChunks[i][count].Id,
+                        BankAccountId = bankAccountChunks[i][count].Id
                     });
                 count++;
             }
@@ -58,12 +63,12 @@ public class SQLPublisher
             while(count < 7500)
             {
                 bankAccountUsers.Add(new(){
-                        User = usersChunks[i][count],
-                        BankAccount = bankAccountChunks[i][count]
+                        UserId = usersChunks[i][count].Id,
+                        BankAccountId = bankAccountChunks[i][count].Id
                     });
                 bankAccountUsers.Add(new(){
-                        User = usersChunks[i][count+2500],
-                        BankAccount = bankAccountChunks[i][count]
+                        UserId = usersChunks[i][count+2500].Id,
+                        BankAccountId = bankAccountChunks[i][count].Id
                     });                    
                 count++;
             }
@@ -75,7 +80,9 @@ public class SQLPublisher
         
         Console.WriteLine("Bank");
         
-        
+        bankContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Banks OFF");
+        bankContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.BankAccounts OFF");
+        bankContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Users OFF");
 
         var endTime = DateTime.Now;
         var totalTime = endTime - startTime;

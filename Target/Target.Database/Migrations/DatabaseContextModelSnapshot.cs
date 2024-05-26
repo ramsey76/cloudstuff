@@ -22,25 +22,6 @@ namespace Target.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Target.Database.Delivery", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateOnly>("DeliveryDate")
-                        .HasColumnType("date");
-
-                    b.Property<Guid>("InstitutionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InstitutionId");
-
-                    b.ToTable("Delivery");
-                });
-
             modelBuilder.Entity("Target.Database.Models.Account", b =>
                 {
                     b.Property<Guid>("Id")
@@ -57,15 +38,15 @@ namespace Target.Database.Migrations
                     b.Property<int>("BankAccountType")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("DeliveryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ExternalId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ExternalId")
+                    b.Property<Guid>("InstitutionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeliveryId");
+                    b.HasIndex("InstitutionId");
 
                     b.ToTable("Accounts");
                 });
@@ -76,18 +57,22 @@ namespace Target.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DeliveryId")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("InstitutionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeliveryId");
+                    b.HasIndex("InstitutionId");
 
-                    b.ToTable("Depositor");
+                    b.ToTable("Depositors");
                 });
 
             modelBuilder.Entity("Target.Database.Models.DepositorAccount", b =>
@@ -105,7 +90,7 @@ namespace Target.Database.Migrations
 
                     b.HasIndex("DepositorId");
 
-                    b.ToTable("DepositorAccount");
+                    b.ToTable("DepositorAccounts");
                 });
 
             modelBuilder.Entity("Target.Database.Models.Institution", b =>
@@ -126,10 +111,10 @@ namespace Target.Database.Migrations
                     b.ToTable("Institutions");
                 });
 
-            modelBuilder.Entity("Target.Database.Delivery", b =>
+            modelBuilder.Entity("Target.Database.Models.Account", b =>
                 {
                     b.HasOne("Target.Database.Models.Institution", "Institution")
-                        .WithMany("Deliveries")
+                        .WithMany("Accounts")
                         .HasForeignKey("InstitutionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -137,26 +122,15 @@ namespace Target.Database.Migrations
                     b.Navigation("Institution");
                 });
 
-            modelBuilder.Entity("Target.Database.Models.Account", b =>
-                {
-                    b.HasOne("Target.Database.Delivery", "Delivery")
-                        .WithMany("Accounts")
-                        .HasForeignKey("DeliveryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Delivery");
-                });
-
             modelBuilder.Entity("Target.Database.Models.Depositor", b =>
                 {
-                    b.HasOne("Target.Database.Delivery", "Delivery")
+                    b.HasOne("Target.Database.Models.Institution", "Institution")
                         .WithMany("Depositors")
-                        .HasForeignKey("DeliveryId")
+                        .HasForeignKey("InstitutionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Delivery");
+                    b.Navigation("Institution");
                 });
 
             modelBuilder.Entity("Target.Database.Models.DepositorAccount", b =>
@@ -177,13 +151,6 @@ namespace Target.Database.Migrations
                     b.Navigation("Depositor");
                 });
 
-            modelBuilder.Entity("Target.Database.Delivery", b =>
-                {
-                    b.Navigation("Accounts");
-
-                    b.Navigation("Depositors");
-                });
-
             modelBuilder.Entity("Target.Database.Models.Account", b =>
                 {
                     b.Navigation("DepositorAccounts");
@@ -196,7 +163,9 @@ namespace Target.Database.Migrations
 
             modelBuilder.Entity("Target.Database.Models.Institution", b =>
                 {
-                    b.Navigation("Deliveries");
+                    b.Navigation("Accounts");
+
+                    b.Navigation("Depositors");
                 });
 #pragma warning restore 612, 618
         }
